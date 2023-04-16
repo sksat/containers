@@ -25,7 +25,7 @@ jobs:
           labels:
             maintainer=sksat
           tags: |
-            prefix=${{ env.IMG_TAG }}-,type=ref,event=pr
+            prefix=${{ env.IMG_TAG }}-pr-,type=ref,event=pr
             prefix=${{ env.IMG_TAG }}-,type=sha
             prefix=${{ env.IMG_TAG }}-,type=sha,format=long
 
