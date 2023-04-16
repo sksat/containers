@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  IMG_NAME: postgres-awscli
+  IMG_TAG: 15.2-bullseye
+
+jobs:
+  build_img:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3.5.2
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4.3.0
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ env.IMG_NAME }}
+          labels:
+            maintainer=sksat
+          tags:
+            prefix=${{ env.IMG_TAG }}-,type=ref,event=pr
+            prefix=${{ env.IMG_TAG }}-,type=sha
+            prefix=${{ env.IMG_TAG }}-,type=sha,format=long
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v4.0.0
+        with:
+          context: ./${{ env.IMG_NAME }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
