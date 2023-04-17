@@ -41,7 +41,7 @@ jobs:
 
       - uses: docker/build-push-action@v4.0.0
         with:
-          context: ./${{ env.IMG_NAME }}
+          context: ./docker-${{ env.IMG_NAME }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
