@@ -29,3 +29,19 @@
   - prefix2: optional．Debian のベースイメージを振りたい時などに使う
   - image-name: コンテナイメージの名前．`ghcr.io/sksat/<image-name>` にイメージが push される
 
+### Dockerfile
+
+- build-tool: `docker`
+- 単一の `Dockerfile` のとき
+  - そのディレクトリを context としてそのまま `docker build`
+- 複数の `Dockerfile` のとき
+  - `Dockerfile.<platform>`
+
+### docker buildx bake
+
+- build-tool: `bake`
+
+### Earthly
+
+- build-tool: `earthly`
+- `earthly ls` で target の一覧が取れるので，これの命名規則を定めて実行するものを決める
