@@ -1,0 +1,14 @@
+debian:
+  - bookworm
+  - bookworm-slim
+  - bullseye
+  - bullseye-slim
+  - buster
+  - buster-slim
+  - experimental
+  - stable
+  - stable-slim
+  - testing
+  - testing-slim
+  - unstable
+  - unstable-slim

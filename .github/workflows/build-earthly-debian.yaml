@@ -7,13 +7,31 @@ on:
   pull_request:
 
 jobs:
+  base_img_matrix:
+    name: generate base image matrix
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+    - name: generate build image matrix
+      id: set-matrix
+      run: |
+        {
+          echo -n "matrix="
+          yq -j .debian ./base-images.yaml | tr -d '\n'
+        } >> "$GITHUB_OUTPUT"
+
   build:
     name: debian-curl
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        base_tag: [bookworm, bookworm-slim, bullseye, bullseye-slim, buster, buster-slim, experimental, stable, stable-slim, testing, testing-slim, unstable, unstable-slim]
+        base_tag: ${{ fromJSON(needs.base_img_matrix.outputs.matrix) }}
 
     steps:
     - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
