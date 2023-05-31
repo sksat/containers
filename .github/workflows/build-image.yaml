@@ -33,7 +33,7 @@ jobs:
             prefix=${{ env.IMG_TAG }}-,type=sha,format=long
 
       - name: Login to ghcr.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v2.1.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
