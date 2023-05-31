@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'renovate.json'
-      - '.github/workflows/validate-renovate.yml'
+      - '.github/workflows/validate-renovate.yaml'
 
 jobs:
   validate-renovate:
