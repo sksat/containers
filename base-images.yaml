@@ -1,14 +1,18 @@
 debian:
   - bookworm
   - bookworm-slim
+  - bookworm-backports
   - bullseye
   - bullseye-slim
+  - bullseye-backports
   - buster
   - buster-slim
   - experimental
   - stable
   - stable-slim
+  - stable-backports
   - testing
   - testing-slim
+  - testing-backports
   - unstable
   - unstable-slim
