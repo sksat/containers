@@ -7,6 +7,24 @@ on:
   pull_request:
 
 jobs:
+  earthly_debian_matrix:
+    name: generate earthly-debian context matrix
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+    - name: generate matrix
+      id: set-matrix
+      run: |
+        {
+          echo -n "matrix="
+          ls -d earthly-debian-* | tr -d '\n'
+        } >> "$GITHUB_OUTPUT"
+
   base_img_matrix:
     name: generate base image matrix
     runs-on: ubuntu-latest
@@ -27,11 +45,12 @@ jobs:
 
   build:
     name: debian-curl
-    needs: base_img_matrix
+    needs: [earthly_debian_matrix, base_img_matrix]
 
     strategy:
       fail-fast: false
       matrix:
+        context: ${{ fromJSON(needs.earthly_debian_matrix.outputs.matrix) }}
         base_tag: ${{ fromJSON(needs.base_img_matrix.outputs.matrix) }}
 
     runs-on: ubuntu-latest
