@@ -22,7 +22,7 @@ jobs:
       run: |
         {
           echo -n "matrix="
-          ls -d earthly-debian-* | tr -d '\n'
+          find -type d -name 'earthly-debian-*' | jq -R -s -c 'split("\n")[:-1]'
         } >> "$GITHUB_OUTPUT"
 
   base_img_matrix:
