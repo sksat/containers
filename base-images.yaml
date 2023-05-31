@@ -1,10 +1,17 @@
 debian:
+  # bookworm
   - bookworm
   - bookworm-slim
   - bookworm-backports
+  # bullseye
+  - 11
+  - 11.7
   - bullseye
   - bullseye-slim
   - bullseye-backports
+  # buster
+  - 10
+  - 10.13
   - buster
   - buster-slim
   - experimental
