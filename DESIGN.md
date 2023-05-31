@@ -24,6 +24,7 @@
 - 色々なコンテナイメージをビルドする monorepo として，[sksat/containers](https://github.com/sksat/containers) を作る
   - 複数のコンテナイメージをここでビルド・メンテする
   - 設定の共通化・Renovate などのメンテ箇所・通知の一元化
+  - 他所の `Dockerfile` をセルフビルドなどにも使う
 - Container Registry には ghcr.io を使用する
   - `ghcr.io/sksat/<image-name>` に push する
 - 1つのサブディレクトリが1つのイメージに対応する
