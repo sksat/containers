@@ -48,6 +48,7 @@ jobs:
 
     strategy:
       fail-fast: false
+      max-parallel: 10
       matrix:
         context: ${{ fromJSON(needs.earthly_debian_matrix.outputs.matrix) }}
         arch: ["x64"]
