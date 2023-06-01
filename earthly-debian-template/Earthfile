@@ -9,4 +9,4 @@ FROM ${BASE_IMG}:${BASE_TAG}
 
 docker:
   ARG DOCKER_META_VERSION
-  SAVE IMAGE --push ghcr.io/sksat/debian-curl:${BASE_TAG}-${DOCKER_META_VERSION}
+  SAVE IMAGE --push ghcr.io/sksat/debian-template:${BASE_TAG}-${DOCKER_META_VERSION}
