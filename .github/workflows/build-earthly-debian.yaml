@@ -60,6 +60,7 @@ jobs:
       id: image-name
       run: |
         src_dir="${{ matrix.context }}"
+        src_dir=${src_dir#"./"}
         image_name=${src_dir#"earthly-"}
         echo "image-name: ${image_name}"
 
