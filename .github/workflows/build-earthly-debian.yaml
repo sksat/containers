@@ -63,12 +63,13 @@ jobs:
         src_dir=${src_dir#"./"}
         image_name=${src_dir#"earthly-"}
         echo "image-name: ${image_name}"
+        echo "name=${image_name}" >> "$GITHUB_OUTPUT"
 
     - uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e # v4.4.0
       id: meta
       with:
         images: |
-          ghcr.io/${{ github.repository_owner }}/debian-curl,enable=true
+          ghcr.io/${{ github.repository_owner }}/${{ steps.image-name.outputs.name }},enable=true
         flavor: |
           latest=auto
         tags: |
@@ -91,8 +92,8 @@ jobs:
     - name: Build & Push container image
       env:
         EARTHLY_PUSH: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
-        EARTHLY_REMOTE_CACHE: ghcr.io/${{ github.repository_owner }}/debian-curl:cache-${{ matrix.base_tag }}-${{ matrix.arch }}
-      working-directory: ./earthly-debian-curl
+        EARTHLY_REMOTE_CACHE: ghcr.io/${{ github.repository_owner }}/${{ steps.image-name.outputs.name }}:cache-${{ matrix.base_tag }}-${{ matrix.arch }}
+      working-directory: ${{ matrix.context }}
       run: |
         earthly +docker \
          --BASE_TAG=${{ matrix.base_tag }}  --DOCKER_META_VERSION=${{ steps.meta.outputs.version }}
