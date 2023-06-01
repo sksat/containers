@@ -50,6 +50,7 @@ jobs:
       fail-fast: false
       matrix:
         context: ${{ fromJSON(needs.earthly_debian_matrix.outputs.matrix) }}
+        arch: ["x64"]
         base_tag: ${{ fromJSON(needs.base_img_matrix.outputs.matrix) }}
 
     runs-on: ubuntu-latest
