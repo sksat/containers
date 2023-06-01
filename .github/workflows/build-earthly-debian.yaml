@@ -56,6 +56,13 @@ jobs:
     steps:
     - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
+    - name: get image-name
+      id: image-name
+      run: |
+        src_dir="${{ matrix.context }}"
+        image_name=${src_dir#"earthly-"}
+        echo "image-name: ${image_name}"
+
     - uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e # v4.4.0
       id: meta
       with:
