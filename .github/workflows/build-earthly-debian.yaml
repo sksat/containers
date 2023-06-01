@@ -43,8 +43,7 @@ jobs:
           yq -o=json .debian ./base-images.yaml | tr -d '\n'
         } >> "$GITHUB_OUTPUT"
 
-  build:
-    name: debian-curl
+  build_debian:
     needs: [earthly_debian_matrix, base_img_matrix]
 
     strategy:
