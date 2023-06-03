@@ -1,10 +1,7 @@
-name: Build
+name: docker
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_call:
 
 env:
   IMG_NAME: postgres-awscli

@@ -1,0 +1,14 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  docker:
+    uses: ./.github/workflows/build-docker.yaml
+
+  earthly_debian:
+    uses: ./.github/workflows/build-earthly-debian.yaml
