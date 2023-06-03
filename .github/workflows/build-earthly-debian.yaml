@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base_tag: ${{ fromJSON(needs.gen_debian_matrix.outputs.base_tag) }}
+        base_tag: ${{ fromJSON(needs.gen_debian_base_matrix.outputs.base_tag) }}
         arch: ["x64"]
 
     runs-on: ubuntu-latest
