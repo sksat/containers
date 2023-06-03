@@ -53,6 +53,7 @@ jobs:
       context: ${{ matrix.context }}
 
   earthly_debian:
+    name: ${{ matrix.context }}
     needs: gen_earthly_debian_matrix
     strategy:
       fail-fast: false
