@@ -29,7 +29,10 @@ jobs:
       fail-fast: false
       matrix:
         context: ${{ fromJSON(needs.gen_docker_matrix.outputs.matrix) }}
+
     uses: ./.github/workflows/build-docker.yaml
+    with:
+      context: ${{ matrix.context }}
 
   earthly_debian:
     uses: ./.github/workflows/build-earthly-debian.yaml
