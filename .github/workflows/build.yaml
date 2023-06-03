@@ -42,6 +42,7 @@ jobs:
         } >> "$GITHUB_OUTPUT"
 
   docker:
+    name: ${{ matrix.context }}
     needs: gen_docker_matrix
     strategy:
       fail-fast: false
