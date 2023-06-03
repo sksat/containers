@@ -7,8 +7,32 @@ on:
   pull_request:
 
 jobs:
+  gen_docker_matrix:
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+    - name: generate matrix
+      id: set-matrix
+      run: |
+        {
+          echo -n "matrix="
+          find . -type d -name 'docker-*' | jq -R -s -c 'split("\n")[:-1]'
+        } >> "$GITHUB_OUTPUT"
+
   docker:
+    needs: gen_docker_matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        context: ${{ fromJSON(needs.gen_docker_matrix.outputs.matrix) }}
+
     uses: ./.github/workflows/build-docker.yaml
+    with:
+      context: ${{ matrix.context }}
 
   earthly_debian:
     uses: ./.github/workflows/build-earthly-debian.yaml
