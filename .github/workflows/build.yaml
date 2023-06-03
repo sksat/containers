@@ -63,9 +63,13 @@ jobs:
 
   earthly_debian:
     needs: gen_earthly_debian_matrix
-    uses: ./.github/workflows/build-earthly-debian.yaml
     strategy:
       fail-fast: false
       matrix:
         context: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.context) }}
         base_tag: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.base_tag) }}
+
+    uses: ./.github/workflows/build-earthly-debian.yaml
+    with:
+      context: ${{ matrix.context }}
+      base_tag: ${{ matrix.base_tag }}
