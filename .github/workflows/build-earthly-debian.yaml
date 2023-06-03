@@ -2,45 +2,20 @@ name: earthly-debian
 
 on:
   workflow_call:
+    inputs:
+      context:
+        required: true
+        type: string
+      base_tag:
+        required: true
+        type: string
 
 jobs:
-  earthly_debian_matrix:
-    name: generate earthly-debian matrix
-
-    outputs:
-      context: ${{ steps.context-matrix.outputs.matrix }}
-      base_tag: ${{ steps.base-matrix.outputs.matrix }}
-
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-
-    - name: generate context matrix
-      id: context-matrix
-      run: |
-        {
-          echo -n "matrix="
-          find . -type d -name 'earthly-debian-*' | jq -R -s -c 'split("\n")[:-1]'
-        } >> "$GITHUB_OUTPUT"
-
-    - name: generate build image matrix
-      id: base-matrix
-      run: |
-        {
-          echo -n "matrix="
-          yq -o=json .debian ./base-images.yaml | tr -d '\n'
-        } >> "$GITHUB_OUTPUT"
-
   build_debian:
-    needs: [earthly_debian_matrix]
-
     strategy:
       fail-fast: false
-      max-parallel: 10
       matrix:
-        context: ${{ fromJSON(needs.earthly_debian_matrix.outputs.context) }}
         arch: ["x64"]
-        base_tag: ${{ fromJSON(needs.earthly_debian_matrix.outputs.base_tag) }}
 
     runs-on: ubuntu-latest
     steps:
@@ -49,7 +24,7 @@ jobs:
     - name: get image-name
       id: image-name
       run: |
-        src_dir="${{ matrix.context }}"
+        src_dir="${{ inputs.context }}"
         src_dir=${src_dir#"./"}
         image_name=${src_dir#"earthly-"}
         echo "image-name: ${image_name}"
@@ -82,8 +57,8 @@ jobs:
     - name: Build & Push container image
       env:
         EARTHLY_PUSH: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
-        EARTHLY_REMOTE_CACHE: ghcr.io/${{ github.repository_owner }}/${{ steps.image-name.outputs.name }}:cache-${{ matrix.base_tag }}-${{ matrix.arch }}
-      working-directory: ${{ matrix.context }}
+        EARTHLY_REMOTE_CACHE: ghcr.io/${{ github.repository_owner }}/${{ steps.image-name.outputs.name }}:cache-${{ inputs.base_tag }}-${{ matrix.arch }}
+      working-directory: ${{ inputs.context }}
       run: |
         earthly +docker \
-         --BASE_TAG=${{ matrix.base_tag }}  --DOCKER_META_VERSION=${{ steps.meta.outputs.version }}
+         --BASE_TAG=${{ inputs.base_tag }}  --DOCKER_META_VERSION=${{ steps.meta.outputs.version }}

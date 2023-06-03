@@ -23,6 +23,33 @@ jobs:
           find . -type d -name 'docker-*' | jq -R -s -c 'split("\n")[:-1]'
         } >> "$GITHUB_OUTPUT"
 
+  gen_earthly_debian_matrix:
+    name: generate earthly-debian matrix
+
+    outputs:
+      context: ${{ steps.context-matrix.outputs.matrix }}
+      base_tag: ${{ steps.base-matrix.outputs.matrix }}
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+    - name: generate context matrix
+      id: context-matrix
+      run: |
+        {
+          echo -n "matrix="
+          find . -type d -name 'earthly-debian-*' | jq -R -s -c 'split("\n")[:-1]'
+        } >> "$GITHUB_OUTPUT"
+
+    - name: generate build image matrix
+      id: base-matrix
+      run: |
+        {
+          echo -n "matrix="
+          yq -o=json .debian ./base-images.yaml | tr -d '\n'
+        } >> "$GITHUB_OUTPUT"
+
   docker:
     needs: gen_docker_matrix
     strategy:
@@ -35,4 +62,10 @@ jobs:
       context: ${{ matrix.context }}
 
   earthly_debian:
+    needs: gen_earthly_debian_matrix
     uses: ./.github/workflows/build-earthly-debian.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        context: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.context) }}
+        base_tag: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.base_tag) }}
