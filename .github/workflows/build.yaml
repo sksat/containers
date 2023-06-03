@@ -28,7 +28,6 @@ jobs:
 
     outputs:
       context: ${{ steps.context-matrix.outputs.matrix }}
-      base_tag: ${{ steps.base-matrix.outputs.matrix }}
 
     runs-on: ubuntu-latest
     steps:
@@ -40,14 +39,6 @@ jobs:
         {
           echo -n "matrix="
           find . -type d -name 'earthly-debian-*' | jq -R -s -c 'split("\n")[:-1]'
-        } >> "$GITHUB_OUTPUT"
-
-    - name: generate build image matrix
-      id: base-matrix
-      run: |
-        {
-          echo -n "matrix="
-          yq -o=json .debian ./base-images.yaml | tr -d '\n'
         } >> "$GITHUB_OUTPUT"
 
   docker:
@@ -67,9 +58,7 @@ jobs:
       fail-fast: false
       matrix:
         context: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.context) }}
-        base_tag: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.base_tag) }}
 
     uses: ./.github/workflows/build-earthly-debian.yaml
     with:
       context: ${{ matrix.context }}
-      base_tag: ${{ matrix.base_tag }}
