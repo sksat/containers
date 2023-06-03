@@ -5,35 +5,26 @@ on:
 
 jobs:
   earthly_debian_matrix:
-    name: generate earthly-debian context matrix
+    name: generate earthly-debian matrix
 
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      context: ${{ steps.context-matrix.outputs.matrix }}
+      base_tag: ${{ steps.base-matrix.outputs.matrix }}
 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
-    - name: generate matrix
-      id: set-matrix
+    - name: generate context matrix
+      id: context-matrix
       run: |
         {
           echo -n "matrix="
           find . -type d -name 'earthly-debian-*' | jq -R -s -c 'split("\n")[:-1]'
         } >> "$GITHUB_OUTPUT"
 
-  base_img_matrix:
-    name: generate base image matrix
-    runs-on: ubuntu-latest
-
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-
-    steps:
-    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-
     - name: generate build image matrix
-      id: set-matrix
+      id: base-matrix
       run: |
         {
           echo -n "matrix="
@@ -41,15 +32,15 @@ jobs:
         } >> "$GITHUB_OUTPUT"
 
   build_debian:
-    needs: [earthly_debian_matrix, base_img_matrix]
+    needs: [earthly_debian_matrix]
 
     strategy:
       fail-fast: false
       max-parallel: 10
       matrix:
-        context: ${{ fromJSON(needs.earthly_debian_matrix.outputs.matrix) }}
+        context: ${{ fromJSON(needs.earthly_debian_matrix.outputs.context) }}
         arch: ["x64"]
-        base_tag: ${{ fromJSON(needs.base_img_matrix.outputs.matrix) }}
+        base_tag: ${{ fromJSON(needs.earthly_debian_matrix.outputs.base_tag) }}
 
     runs-on: ubuntu-latest
     steps:
