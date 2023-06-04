@@ -46,6 +46,7 @@ jobs:
     needs: gen_docker_matrix
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         context: ${{ fromJSON(needs.gen_docker_matrix.outputs.matrix) }}
 
@@ -58,6 +59,7 @@ jobs:
     needs: gen_earthly_debian_matrix
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         context: ${{ fromJSON(needs.gen_earthly_debian_matrix.outputs.context) }}
 
