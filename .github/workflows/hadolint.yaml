@@ -13,5 +13,4 @@ jobs:
         uses: reviewdog/action-hadolint@v1.34.1
         with:
           reporter: github-pr-review
-          filter_mode: nofilter
           fail_on_error: true
