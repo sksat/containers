@@ -35,9 +35,9 @@ jobs:
             latest=auto
           tags: |
             enable={{is_default_branch}},type=raw,value=${{ env.IMG_TAG }}
+            enable={{is_default_branch}},prefix=${{ env.IMG_TAG }}-,type=sha
+            enable={{is_default_branch}},prefix=${{ env.IMG_TAG }}-,type=sha,format=long
             prefix=${{ env.IMG_TAG }}-pr-,type=ref,event=pr
-            prefix=${{ env.IMG_TAG }}-,type=sha
-            prefix=${{ env.IMG_TAG }}-,type=sha,format=long
 
       - name: Login to ghcr.io
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0

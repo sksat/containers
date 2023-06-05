@@ -57,9 +57,9 @@ jobs:
         flavor: |
           latest=auto
         tags: |
-          type=sha
+          enable={{is_default_branch}},type=raw,value=${{ needs.rust_version.outputs.rust_version }}
+          enable={{is_default_branch}},type=sha
           type=ref,event=pr
-          type=raw,value=${{ needs.rust_version.outputs.rust_version }},enable={{is_default_branch}}
 
     - uses: earthly/actions-setup@135d686cdc4619918fd1b542d0a08d61dd104518 # v1.0.7
       with:
