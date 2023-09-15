@@ -1,4 +1,4 @@
-FROM postgres:15-bullseye
+FROM postgres:16-bullseye
 
 RUN apt-get update -y \
   && apt-get install -y --no-install-recommends awscli \
